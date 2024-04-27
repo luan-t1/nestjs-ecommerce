@@ -116,51 +116,199 @@ export class ProductService {
     return this.productRepository.find(options);
   }
 
-  async findProductsByHasDiscount(hasDiscount: boolean): Promise<Product[]> {
-    return this.productRepository.find({
-      where: {
-        has_discount: hasDiscount
-      },
-    });
-  }
+  //async findProductsByHasDiscount(hasDiscount: boolean): Promise<Product[]> {
+  //  return this.productRepository.find({
+   //   where: {
+    //    has_discount: hasDiscount
+   //   },
+  //  });
+  //}
 
-  async findProductsByIsNew(isNew: boolean): Promise<Product[]> {
-    return this.productRepository.find({ where: { is_new: isNew } });
-  }
-
-  async findProductsByIsNewAndHasDiscount(isNew: boolean, hasDiscount: boolean): Promise<Product[]> {
-    const query = this.productRepository.createQueryBuilder('product');
-
-    if (isNew && hasDiscount) {
-      return query.where('product.is_new = :isNew AND product.has_discount = :hasDiscount').setParameters({ isNew, hasDiscount }).getMany();
-    } else if (isNew) {
-      return query.where('product.is_new = :isNew').setParameter('isNew', isNew).getMany();
-    } else if (hasDiscount) {
-      return query.where('product.has_discount = :hasDiscount').setParameter('hasDiscount', hasDiscount).getMany();
-    } else {
-      return query.getMany();
+  async findProductsByHasDiscount(
+    hasDiscount: boolean,
+    page: number,
+    pageSize: number,
+    sort: 'asc' | 'desc' | 'none',
+  ): Promise<Product[]> {
+    const skip = (page - 1) * pageSize;
+  
+    // Opções de consulta para a ordem de classificação
+    let options: FindManyOptions<Product> = {
+      where: { has_discount: hasDiscount }, // Filtrar por desconto
+      take: pageSize,
+      skip,
+    };
+  
+    if (sort !== 'none') {
+      options.order = { price: sort === 'asc' ? 'ASC' : 'DESC' }; // Ordenar por preço na ordem especificada
     }
+  
+    return this.productRepository.find(options);
   }
+  
 
-  async findProductsByCategoryAndIsNewAndHasDiscount(categoryId: number, isNew: boolean, hasDiscount: boolean): Promise<Product[]> {
-    const query = this.productRepository.createQueryBuilder('product');
+  //async findProductsByIsNew(isNew: boolean): Promise<Product[]> {
+  //  return this.productRepository.find({ where: { is_new: isNew } });
+  //}
 
-    if (isNew && hasDiscount) {
-      return query.where('product.categoryId = :categoryId AND product.is_new = :isNew AND product.has_discount = :hasDiscount')
-        .setParameters({ categoryId, isNew, hasDiscount })
-        .getMany();
-    } else if (isNew) {
-      return query.where('product.categoryId = :categoryId AND product.is_new = :isNew')
-        .setParameters({ categoryId, isNew })
-        .getMany();
-    } else if (hasDiscount) {
-      return query.where('product.categoryId = :categoryId AND product.has_discount = :hasDiscount')
-        .setParameters({ categoryId, hasDiscount })
-        .getMany();
-    } else {
-      return query.where('product.categoryId = :categoryId')
-        .setParameter('categoryId', categoryId)
-        .getMany();
+  async findProductsByIsNew(
+    isNew: boolean,
+    page: number,
+    pageSize: number,
+    sort: 'asc' | 'desc' | 'none',
+  ): Promise<Product[]> {
+    const skip = (page - 1) * pageSize;
+  
+    // Opções de consulta para a ordem de classificação
+    let options: FindManyOptions<Product> = {
+      where: { is_new: isNew }, // Filtrar por novo
+      take: pageSize,
+      skip,
+    };
+  
+    if (sort !== 'none') {
+      options.order = { price: sort === 'asc' ? 'ASC' : 'DESC' }; // Ordenar por preço na ordem especificada
     }
+  
+    return this.productRepository.find(options);
   }
+
+  //async findProductsByIsNewAndHasDiscount(isNew: boolean, hasDiscount: boolean): Promise<Product[]> {
+  //  const query = this.productRepository.createQueryBuilder('product');
+
+  //  if (isNew && hasDiscount) {
+  //    return query.where('product.is_new = :isNew AND product.has_discount = :hasDiscount').setParameters({ isNew, hasDiscount }).getMany();
+  //  } else if (isNew) {
+   //   return query.where('product.is_new = :isNew').setParameter('isNew', isNew).getMany();
+  //  } else if (hasDiscount) {
+  //    return query.where('product.has_discount = :hasDiscount').setParameter('hasDiscount', hasDiscount).getMany();
+  //  } else {
+  //    return query.getMany();
+  //  }
+  //}
+
+  async findProductsByIsNewAndHasDiscount(
+    isNew: boolean,
+    hasDiscount: boolean,
+    page: number,
+    pageSize: number,
+    sort: 'asc' | 'desc' | 'none',
+  ): Promise<Product[]> {
+    const skip = (page - 1) * pageSize;
+  
+    // Opções de consulta para a ordem de classificação
+    let options: FindManyOptions<Product> = {
+      where: { is_new: isNew, has_discount: hasDiscount }, // Filtrar por novo e com desconto
+      take: pageSize,
+      skip,
+    };
+  
+    if (sort !== 'none') {
+      options.order = { price: sort === 'asc' ? 'ASC' : 'DESC' }; // Ordenar por preço na ordem especificada
+    }
+  
+    return this.productRepository.find(options);
+  }
+
+  //async findProductsByCategoryAndIsNewAndHasDiscount(categoryId: number, isNew: boolean, hasDiscount: boolean): Promise<Product[]> {
+  //  const query = this.productRepository.createQueryBuilder('product');
+
+  //  if (isNew && hasDiscount) {
+  //    return query.where('product.categoryId = :categoryId AND product.is_new = :isNew AND product.has_discount = :hasDiscount')
+  //      .setParameters({ categoryId, isNew, hasDiscount })
+   //     .getMany();
+  //  } else if (isNew) {
+  //    return query.where('product.categoryId = :categoryId AND product.is_new = :isNew')
+  //      .setParameters({ categoryId, isNew })
+  //      .getMany();
+  //  } else if (hasDiscount) {
+  //    return query.where('product.categoryId = :categoryId AND product.has_discount = :hasDiscount')
+  //      .setParameters({ categoryId, hasDiscount })
+  //      .getMany();
+  //  } else {
+  //    return query.where('product.categoryId = :categoryId')
+   //     .setParameter('categoryId', categoryId)
+  //      .getMany();
+  //  }
+  //}
+
+  async findProductsByCategoryAndHasDiscount(
+    categoryId: number,
+    hasDiscount: boolean,
+    page: number,
+    pageSize: number,
+    sort: 'asc' | 'desc' | 'none',
+  ): Promise<Product[]> {
+    const skip = (page - 1) * pageSize;
+  
+    let options: FindManyOptions<Product> = {
+      where: { categoryId, has_discount: hasDiscount },
+      take: pageSize,
+      skip,
+    };
+  
+    if (sort !== 'none') {
+      options.order = { price: sort === 'asc' ? 'ASC' : 'DESC' };
+    }
+  
+    return this.productRepository.find(options);
+  }
+
+  async findProductsByCategoryAndIsNew(
+    categoryId: number,
+    isNew: boolean,
+    page: number,
+    pageSize: number,
+    sort: 'asc' | 'desc' | 'none',
+  ): Promise<Product[]> {
+    const skip = (page - 1) * pageSize;
+  
+    let options: FindManyOptions<Product> = {
+      where: { categoryId, is_new: isNew },
+      take: pageSize,
+      skip,
+    };
+  
+    if (sort !== 'none') {
+      options.order = { price: sort === 'asc' ? 'ASC' : 'DESC' };
+    }
+  
+    return this.productRepository.find(options);
+  }
+
+  async findProductsByCategoryAndIsNewAndHasDiscount(
+    categoryId: number,
+    isNew: boolean,
+    hasDiscount: boolean,
+    page: number,
+    pageSize: number,
+    sort: 'asc' | 'desc' | 'none',
+  ): Promise<Product[]> {
+    const skip = (page - 1) * pageSize;
+  
+    const query = this.productRepository.createQueryBuilder('product');
+  
+    if (isNew && hasDiscount) {
+      query.where('product.categoryId = :categoryId AND product.is_new = :isNew AND product.has_discount = :hasDiscount')
+        .setParameters({ categoryId, isNew, hasDiscount });
+    } else if (isNew) {
+      query.where('product.categoryId = :categoryId AND product.is_new = :isNew')
+        .setParameters({ categoryId, isNew });
+    } else if (hasDiscount) {
+      query.where('product.categoryId = :categoryId AND product.has_discount = :hasDiscount')
+        .setParameters({ categoryId, hasDiscount });
+    } else {
+      query.where('product.categoryId = :categoryId')
+        .setParameter('categoryId', categoryId);
+    }
+  
+    if (sort !== 'none') {
+      query.orderBy('product.price', sort === 'asc' ? 'ASC' : 'DESC');
+    }
+  
+    const products = await query.skip(skip).take(pageSize).getMany();
+    return products;
+  }
+
+  
 }

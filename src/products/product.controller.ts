@@ -57,29 +57,94 @@ export class ProductController {
   }
 
 
+  //@Get('hasDiscount/:hasDiscount')
+  //async findProductsByHasDiscount(@Param('hasDiscount') hasDiscount: boolean): Promise<Product[]> {
+  //  return this.productService.findProductsByHasDiscount(hasDiscount);
+  //}
+
   @Get('hasDiscount/:hasDiscount')
-  async findProductsByHasDiscount(@Param('hasDiscount') hasDiscount: boolean): Promise<Product[]> {
-    return this.productService.findProductsByHasDiscount(hasDiscount);
+  async findProductsByHasDiscount(
+  @Param('hasDiscount') hasDiscount: boolean,
+  @Query('page') page: number = 1,
+  @Query('pageSize') pageSize: number = 16,
+  @Query('sort') sort: 'asc' | 'desc' | 'none' = 'asc',
+  ): Promise<Product[]> {
+    return this.productService.findProductsByHasDiscount(hasDiscount, page, pageSize, sort);
   }
+
+  //@Get('isNew/:isNew')
+  //async findProductsByIsNew(@Param('isNew') isNew: boolean): Promise<Product[]> {
+  //  return this.productService.findProductsByIsNew(isNew);
+  //}
 
   @Get('isNew/:isNew')
-  async findProductsByIsNew(@Param('isNew') isNew: boolean): Promise<Product[]> {
-    return this.productService.findProductsByIsNew(isNew);
+  async findProductsByIsNew(
+  @Param('isNew') isNew: boolean,
+  @Query('page') page: number = 1,
+  @Query('pageSize') pageSize: number = 16,
+  @Query('sort') sort: 'asc' | 'desc' | 'none' = 'asc',
+  ): Promise<Product[]> {
+    return this.productService.findProductsByIsNew(isNew, page, pageSize, sort);
   }
 
+
+  //@Get('isNewAndHasDiscount/:isNew/:hasDiscount')
+  //async findProductsByIsNewAndHasDiscount(@Param('isNew') isNew: boolean, @Param('hasDiscount') hasDiscount: boolean): Promise<Product[]> {
+  //  return this.productService.findProductsByIsNewAndHasDiscount(isNew, hasDiscount);
+  //}
 
   @Get('isNewAndHasDiscount/:isNew/:hasDiscount')
-  async findProductsByIsNewAndHasDiscount(@Param('isNew') isNew: boolean, @Param('hasDiscount') hasDiscount: boolean): Promise<Product[]> {
-    return this.productService.findProductsByIsNewAndHasDiscount(isNew, hasDiscount);
+  async findProductsByIsNewAndHasDiscount(
+  @Param('isNew') isNew: boolean,
+  @Param('hasDiscount') hasDiscount: boolean,
+  @Query('page') page: number = 1,
+  @Query('pageSize') pageSize: number = 16,
+  @Query('sort') sort: 'asc' | 'desc' | 'none' = 'asc',
+  ): Promise<Product[]> {
+    return this.productService.findProductsByIsNewAndHasDiscount(isNew, hasDiscount, page, pageSize, sort);
   }
 
-  @Get('category/:categoryId/isNew/:isNew/hasDiscount/:hasDiscount')
-  async findByCategoryAndIsNewAndHasDiscount(
-    @Param('categoryId') categoryId: number,
-    @Param('isNew') isNew: boolean,
-    @Param('hasDiscount') hasDiscount: boolean,
+  //@Get('category/:categoryId/isNew/:isNew/hasDiscount/:hasDiscount')
+  //async findByCategoryAndIsNewAndHasDiscount(
+  //  @Param('categoryId') categoryId: number,
+  //  @Param('isNew') isNew: boolean,
+   // @Param('hasDiscount') hasDiscount: boolean,
+  //): Promise<Product[]> {
+  //  return this.productService.findProductsByCategoryAndIsNewAndHasDiscount(categoryId, isNew, hasDiscount);
+  //}
+
+  @Get('category/:categoryId/hasDiscount/:hasDiscount')
+  async findByCategoryAndHasDiscount(
+  @Param('categoryId') categoryId: number,
+  @Param('hasDiscount') hasDiscount: boolean,
+  @Query('page') page: number = 1,
+  @Query('pageSize') pageSize: number = 16,
+  @Query('sort') sort: 'asc' | 'desc' | 'none' = 'asc',
   ): Promise<Product[]> {
-    return this.productService.findProductsByCategoryAndIsNewAndHasDiscount(categoryId, isNew, hasDiscount);
+    return this.productService.findProductsByCategoryAndHasDiscount(categoryId, hasDiscount, page, pageSize, sort);
+  }
+
+  @Get('category/:categoryId/isNew/:isNew')
+  async findByCategoryAndIsNew(
+  @Param('categoryId') categoryId: number,
+  @Param('isNew') isNew: boolean,
+  @Query('page') page: number = 1,
+  @Query('pageSize') pageSize: number = 16,
+  @Query('sort') sort: 'asc' | 'desc' | 'none' = 'asc',
+  ): Promise<Product[]> {
+    return this.productService.findProductsByCategoryAndIsNew(categoryId, isNew, page, pageSize, sort);
   }
   
+  @Get('category/:categoryId/isNew/:isNew/hasDiscount/:hasDiscount')
+  async findByCategoryAndIsNewAndHasDiscount(
+  @Param('categoryId') categoryId: number,
+  @Param('isNew') isNew: boolean,
+  @Param('hasDiscount') hasDiscount: boolean,
+  @Query('page') page: number = 1,
+  @Query('pageSize') pageSize: number = 16,
+  @Query('sort') sort: 'asc' | 'desc' | 'none' = 'asc',
+  ): Promise<Product[]> {
+    return this.productService.findProductsByCategoryAndIsNewAndHasDiscount(categoryId, isNew, hasDiscount, page, pageSize, sort);
+  }
+
 }
