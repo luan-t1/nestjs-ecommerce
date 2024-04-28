@@ -42,8 +42,12 @@ export class Product {
   @Column({length:250})
   image_link: string;
 
-  @Column({length: 1000})
-  other_images_link: string;
+  //@Column({length: 1000})
+  //other_images_link: string;
+
+  @Column('varchar', { array: true, length: 1000, nullable: true }) // Alteração aqui
+  other_images_link: string[]; // Alteração aqui
+
 
   @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_date: Date;

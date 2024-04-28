@@ -46,25 +46,45 @@ export class ProductService {
     return product;
   }
 
-  async create(productData: CreateProductDto): Promise<Product> {
+  //async create(productData: CreateProductDto): Promise<Product> {
 
     // Criar uma nova instância do produto
-    const product = new Product();
-    product.name = productData.name;
-    product.sku = productData.sku;
-    product.description = productData.description;
-    product.large_description = productData.large_description;
-    product.price = productData.price;
-    product.discount_price = productData.discount_price;
-    product.discount_percent = productData.discount_percent;
-    product.is_new = productData.is_new;
-    product.has_discount = productData.has_discount;
-    product.image_link = productData.image_link;
-    product.other_images_link = productData.other_images_link;
-    product.categoryId = productData.categoryId;
+  //  const product = new Product();
+  //  product.name = productData.name;
+  //  product.sku = productData.sku;
+  //  product.description = productData.description;
+  //  product.large_description = productData.large_description;
+  //  product.price = productData.price;
+  //  product.discount_price = productData.discount_price;
+  //  product.discount_percent = productData.discount_percent;
+  //  product.is_new = productData.is_new;
+  //  product.has_discount = productData.has_discount;
+  //  product.image_link = productData.image_link;
+  //  product.other_images_link = productData.other_images_link;
+  //  product.categoryId = productData.categoryId;
 
     // Salvar o produto no banco de dados
-    return this.productRepository.save(product);
+  //  return this.productRepository.save(product);
+//}
+
+async create(productData: CreateProductDto): Promise<Product> {
+  // Criar uma nova instância do produto
+  const product = new Product();
+  product.name = productData.name;
+  product.sku = productData.sku;
+  product.description = productData.description;
+  product.large_description = productData.large_description;
+  product.price = productData.price;
+  product.discount_price = productData.discount_price;
+  product.discount_percent = productData.discount_percent;
+  product.is_new = productData.is_new;
+  product.has_discount = productData.has_discount;
+  product.image_link = productData.image_link;
+  product.other_images_link = productData.other_images_link;
+  product.categoryId = productData.categoryId;
+
+  // Salvar o produto no banco de dados
+  return this.productRepository.save(product);
   }
 
   async update(id: number, productData: UpdateProductDto): Promise<Product> {
@@ -187,6 +207,28 @@ export class ProductService {
   //  }
   //}
 
+  async findProductsByFilter(
+    isNew: boolean,
+    hasDiscount: boolean,
+    page: number,
+    pageSize: number,
+    sort: 'asc' | 'desc' | 'none',
+  ): Promise<Product[]> {
+    const skip = (page - 1) * pageSize;
+
+    const queryBuilder = this.productRepository.createQueryBuilder('product');
+
+    queryBuilder.where('product.is_new = :isNew OR product.has_discount = :hasDiscount', { isNew, hasDiscount });
+    queryBuilder.take(pageSize);
+    queryBuilder.skip(skip);
+    
+    if (sort !== 'none') {
+      queryBuilder.orderBy('product.price', sort === 'asc' ? 'ASC' : 'DESC');
+    }
+
+    return queryBuilder.getMany();
+  }
+
   async findProductsByIsNewAndHasDiscount(
     isNew: boolean,
     hasDiscount: boolean,
@@ -290,6 +332,40 @@ export class ProductService {
   
     if (isNew && hasDiscount) {
       query.where('product.categoryId = :categoryId AND product.is_new = :isNew AND product.has_discount = :hasDiscount')
+        .setParameters({ categoryId, isNew, hasDiscount });
+    } else if (isNew) {
+      query.where('product.categoryId = :categoryId AND product.is_new = :isNew')
+        .setParameters({ categoryId, isNew });
+    } else if (hasDiscount) {
+      query.where('product.categoryId = :categoryId AND product.has_discount = :hasDiscount')
+        .setParameters({ categoryId, hasDiscount });
+    } else {
+      query.where('product.categoryId = :categoryId')
+        .setParameter('categoryId', categoryId);
+    }
+  
+    if (sort !== 'none') {
+      query.orderBy('product.price', sort === 'asc' ? 'ASC' : 'DESC');
+    }
+  
+    const products = await query.skip(skip).take(pageSize).getMany();
+    return products;
+  }
+
+  async findProductsByCategoryAndIsNewOrHasDiscount(
+    categoryId: number,
+    isNew: boolean,
+    hasDiscount: boolean,
+    page: number,
+    pageSize: number,
+    sort: 'asc' | 'desc' | 'none',
+  ): Promise<Product[]> {
+    const skip = (page - 1) * pageSize;
+  
+    const query = this.productRepository.createQueryBuilder('product');
+  
+    if (isNew && hasDiscount) {
+      query.where('product.categoryId = :categoryId AND (product.is_new = :isNew OR product.has_discount = :hasDiscount)')
         .setParameters({ categoryId, isNew, hasDiscount });
     } else if (isNew) {
       query.where('product.categoryId = :categoryId AND product.is_new = :isNew')
