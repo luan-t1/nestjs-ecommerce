@@ -15,8 +15,8 @@ export class CategoryService {
     return this.categoryRepository.find();
   }
 
-  async findById(id: any): Promise<Category> {
-    const category = await this.categoryRepository.findOne(id);
+  async findById(id: number): Promise<Category> {
+    const category = await this.categoryRepository.findOne({ where: { id } });
     if (!category) {
       throw new NotFoundException('Categoria não encontrada');
     }
@@ -27,7 +27,7 @@ export class CategoryService {
     const category = new Category();
     category.name = createCategoryDto.name;
     category.image_link = createCategoryDto.image_link;
-    category.products = []; // Inicializa a lista de produtos como vazia
+    category.products = [];
 
     return this.categoryRepository.save(category);
   }
@@ -41,12 +41,7 @@ export class CategoryService {
   }
 
   async remove(id: number): Promise<void> {
-    try {
-      const categoryToRemove = await this.findById(id);
-      await this.categoryRepository.remove(categoryToRemove);
-    } catch (error) {
-      console.error('Erro ao excluir categoria:', error);
-      throw new InternalServerErrorException('Erro interno ao excluir categoria');
-    }
+    const categoryToRemove = await this.findById(id);
+    await this.categoryRepository.remove(categoryToRemove);
   }
 }

@@ -1,16 +1,11 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
-import { CreateProductDto, ProductFilterDto, UpdateProductDto } from './product.dto';
+import { CreateProductDto, UpdateProductDto } from './product.dto';
 
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
-
-  //@Get()
-  //async findAll(): Promise<Product[]> {
- //   return this.productService.findAll();
- // }
 
   @Get()
   async findAll(
@@ -41,11 +36,6 @@ export class ProductController {
     await this.productService.remove(id);
   }
 
-  //@Get('category/:categoryId')
-  //async findByCategory(@Param('categoryId') categoryId: number): Promise<Product[]> {
-  //  return this.productService.findByCategory(categoryId);
-  //}
-
   @Get('category/:categoryId')
   async findByCategory(
     @Param('categoryId') categoryId: number,
@@ -55,12 +45,6 @@ export class ProductController {
   ): Promise<Product[]> {
     return this.productService.findByCategory(categoryId, page, pageSize, sort);
   }
-
-
-  //@Get('hasDiscount/:hasDiscount')
-  //async findProductsByHasDiscount(@Param('hasDiscount') hasDiscount: boolean): Promise<Product[]> {
-  //  return this.productService.findProductsByHasDiscount(hasDiscount);
-  //}
 
   @Get('hasDiscount/:hasDiscount')
   async findProductsByHasDiscount(
@@ -72,10 +56,6 @@ export class ProductController {
     return this.productService.findProductsByHasDiscount(hasDiscount, page, pageSize, sort);
   }
 
-  //@Get('isNew/:isNew')
-  //async findProductsByIsNew(@Param('isNew') isNew: boolean): Promise<Product[]> {
-  //  return this.productService.findProductsByIsNew(isNew);
-  //}
 
   @Get('isNew/:isNew')
   async findProductsByIsNew(
@@ -87,11 +67,6 @@ export class ProductController {
     return this.productService.findProductsByIsNew(isNew, page, pageSize, sort);
   }
 
-
-  //@Get('isNewAndHasDiscount/:isNew/:hasDiscount')
-  //async findProductsByIsNewAndHasDiscount(@Param('isNew') isNew: boolean, @Param('hasDiscount') hasDiscount: boolean): Promise<Product[]> {
-  //  return this.productService.findProductsByIsNewAndHasDiscount(isNew, hasDiscount);
-  //}
 
   @Get('isNewOrHasDiscount/:isNew/:hasDiscount')
   async findProductsByFilter(
@@ -115,14 +90,6 @@ export class ProductController {
     return this.productService.findProductsByIsNewAndHasDiscount(isNew, hasDiscount, page, pageSize, sort);
   }
 
-  //@Get('category/:categoryId/isNew/:isNew/hasDiscount/:hasDiscount')
-  //async findByCategoryAndIsNewAndHasDiscount(
-  //  @Param('categoryId') categoryId: number,
-  //  @Param('isNew') isNew: boolean,
-   // @Param('hasDiscount') hasDiscount: boolean,
-  //): Promise<Product[]> {
-  //  return this.productService.findProductsByCategoryAndIsNewAndHasDiscount(categoryId, isNew, hasDiscount);
-  //}
 
   @Get('category/:categoryId/hasDiscount/:hasDiscount')
   async findByCategoryAndHasDiscount(

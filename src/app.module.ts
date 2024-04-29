@@ -14,9 +14,9 @@ config();
 @Module({
   imports: [TypeOrmModule.forRoot({
     type: "postgres",
-    url: process.env.DB_URL,
+    url: "postgres://wssoxfjz:J41QmRIlyYCe_Xl8-gaY6IE7BR32zUeQ@isabelle.db.elephantsql.com/wssoxfjz",
     entities: [Product, Category],
-    database: process.env.DB_DB,
+    database: "wssoxfjz",
     synchronize: true
   }),
   ProductModule,
@@ -29,6 +29,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(CorsMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL }); // Aplica o middleware a todas as rotas
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }
