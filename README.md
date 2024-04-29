@@ -32,6 +32,8 @@
 $ npm install
 ```
 
+Talvez seja necessário instalar @nestjs/cli e @nestjs/typeorm manualmente!!!
+
 ## Running the app
 
 ```bash
